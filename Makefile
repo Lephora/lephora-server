@@ -8,6 +8,12 @@ run.local:
 check.local:
 	SPRING_PROFILES_ACTIVE=local ./gradlew clean check
 
+check.style:
+	./gradlew clean checkstyleMain checkstyleTest
+
+ci.test:
+	SPRING_PROFILES_ACTIVE=dev ./gradlew clean ci-test
+
 jar:
 	./gradlew bootJar
 
