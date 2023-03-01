@@ -1,15 +1,51 @@
 kind: pipeline
 type: docker
 name: default
+
 trigger:
   branch:
     - main
   event:
     - push
 steps:
-  - name: build & unitTest
+  - name: build & unit-test
     image: gradle:7.6-jdk17-alpine
     commands:
-      - ./gradlew bootJar
       - ./gradlew clean checkstyleMain checkstyleTest
       - ./gradlew clean ci-test
+      - ./gradlew bootJar
+  - name: acceptance-test
+    image: docker:dind
+    privileged: true
+    network_mode: host
+    environment:
+      GITHUB_TOKEN:
+        from_secret: github_token
+      CONTRACT_ENABLE: true
+      CONTRACT_REPO_OWNER: Lephora
+      CONTRACT_REPO_NAME: lephora-api
+      CONTRACT_REPO_BRANCH: main
+      CONTRACT_REPO_PATH: lephora-server-api.yaml
+      DRONE_GIT_USERNAME: NoodleCookie
+      DRONE_GIT_PASSWORD:
+        from_secret: github_token
+      DEFAULT_HOST: http://127.0.0.1:18080
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
+    commands:
+      - echo "start acceptance test"
+      - apk update && apk --no-cache add go git bash
+      - bash ./acceptance-test/setup
+      - git clone https://github.com/Lephora/support-kit.git
+      - cd support-kit/acceptance-test/core/
+      - go build -o acceptance-test main.go
+      - chmod +x acceptance-test
+      - mv acceptance-test ..
+      - cd ..
+      - ./acceptance-test assert --roots testdata
+
+volumes:
+  - name: docker_socket
+    host:
+      path: /var/run/docker.sock
