@@ -36,7 +36,7 @@ steps:
     commands:
       - echo "start acceptance test"
       - apk update && apk --no-cache add go git bash
-      - bash ./acceptance-test/setup
+      - bash ./acceptance-test/setup act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
       - git clone https://github.com/Lephora/support-kit.git
       - cd support-kit/acceptance-test/core/
       - go build -o acceptance-test main.go
@@ -44,6 +44,7 @@ steps:
       - mv acceptance-test ..
       - cd ..
       - ./acceptance-test assert --roots testdata
+      - bash ../../acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
 
 volumes:
   - name: docker_socket
