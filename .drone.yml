@@ -44,7 +44,20 @@ steps:
       - mv acceptance-test ..
       - cd ..
       - ./acceptance-test assert --roots testdata
-      - bash ../../acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
+  - name: clean
+    image: docker:dind
+    privileged: true
+    network_mode: host
+    volumes:
+      - name: docker_socket
+        path: /var/run/docker.sock
+    when:
+      status:
+        - success
+        - failure
+    commands:
+      - apk update && apk --no-cache add bash
+      - bash ./acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
 
 volumes:
   - name: docker_socket

@@ -5,5 +5,5 @@ SUT_NAME=$2
 
 cp ./build/libs/lephora-server-*.jar acceptance-test/
 docker build -t lephora-server:latest acceptance-test/
-docker run --name=${DB_NAME} -d -p 18080:8080 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=lephora postgres:14.5
-docker run --name=${SUT_NAME} -d --network=container:${DB_NAME} lephora-server:latest
+docker run --name="${DB_NAME}" -d -p 18080:8080 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=lephora postgres:14.5
+docker run --name="${SUT_NAME}" -d --network=container:"${DB_NAME}" lephora-server:latest

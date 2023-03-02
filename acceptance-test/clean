@@ -3,5 +3,5 @@
 DB_NAME=$1
 SUT_NAME=$2
 
-docker rm -f ${DB_NAME}
-docker rm -f ${SUT_NAME}
+docker rm -f "${DB_NAME}"
+docker rm -f "${SUT_NAME}"
