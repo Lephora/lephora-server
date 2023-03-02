@@ -1,4 +1,5 @@
 plugins {
+    id 'jacoco'
     id 'checkstyle'
     id 'java'
     id 'org.springframework.boot' version '3.0.3'
@@ -28,9 +29,39 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.56
+            }
+        }
+    }
+}
+
 tasks {
     test {
         useJUnitPlatform()
+    }
+
+    jacocoTestReport {
+        dependsOn(test)
+    }
+
+    jacocoTestCoverageVerification {
+        dependsOn(test)
     }
 }
 
