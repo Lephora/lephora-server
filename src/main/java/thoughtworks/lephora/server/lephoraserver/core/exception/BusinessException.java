@@ -8,4 +8,12 @@ public class BusinessException extends RuntimeException {
         this.errorCode = errorCode;
         this.errorMessage = message;
     }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 }
