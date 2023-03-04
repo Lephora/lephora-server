@@ -35,4 +35,5 @@ class CommodityManagementQueryApiTest {
                 .perform(get("/commodity/000001"))
                 .andExpect(status().isOk());
     }
+
 }

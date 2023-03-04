@@ -4,11 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.annotation.Transactional;
 import thoughtworks.lephora.server.lephoraserver.core.DataSourceConfiguration;
+import thoughtworks.lephora.server.lephoraserver.query.exception.CommodityNotFoundException;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -18,10 +19,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Transactional
 @SpringBootTest(classes = DataSourceConfiguration.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = "thoughtworks.lephora.server.lephoraserver.query")
 class CommodityQueryTest {
 
     @Autowired
@@ -56,6 +58,15 @@ class CommodityQueryTest {
         assertThat(commodityDetailViewResult.images().get(1).url(), equalTo(url));
         assertThat(commodityDetailViewResult.images().get(0).alternativeText(), equalTo(alternativeText));
         assertThat(commodityDetailViewResult.images().get(1).alternativeText(), equalTo(alternativeText));
+    }
+
+    @Test
+    void should_throw_exception_when_query_commodity_detail_by_not_exist_sku() {
+        //given
+        var sku = "000001";
+
+        // when then
+        assertThrows(CommodityNotFoundException.class, () -> commodityQuery.queryCommodityDetailBySku(sku));
     }
 
     private String saveCommodity(String title, String description, String price, String priceUnit) {

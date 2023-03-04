@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thoughtworks.lephora.server.lephoraserver.query.exception.CommodityNotFoundException;
 import thoughtworks.lephora.server.lephoraserver.query.view.CommodityDetailView;
 import thoughtworks.lephora.server.lephoraserver.query.view.CommodityImageView;
 
@@ -33,7 +34,7 @@ public class CommodityQuery {
                 """;
         final var commodityDetailView = jdbcTemplate.queryForStream(querySql, new MapSqlParameterSource("sku", sku), this::commodityDetailViewMapper)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("not define"));
+                .orElseThrow(() -> new CommodityNotFoundException("sku %s not exist".formatted(sku)));
 
         final var commodityImageViews = queryCommodityImagesBySku(sku);
         return new CommodityDetailView(
