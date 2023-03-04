@@ -1,3 +1,5 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
+  messages:
+    basename: messages.exception

@@ -1,6 +1,8 @@
 package thoughtworks.lephora.server.lephoraserver.rest;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static thoughtworks.lephora.server.lephoraserver.query.constant.QueryErrorCode.COMMODITY_NOT_FOUND;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.COMMODITY_SKU_ILLEGAL;
 
 @WebMvcTest(CommodityManagementQueryApi.class)
 class CommodityManagementQueryApiTest {
@@ -55,4 +58,13 @@ class CommodityManagementQueryApiTest {
                 .andExpect(jsonPath("$.errorCode", is(COMMODITY_NOT_FOUND)));
     }
 
+    @CsvSource({"1", "xxxxxx", "X00001", "0000000001"})
+    @ParameterizedTest
+    void should_return_error_response_when_validate_sku_failed(String illegalSku) throws Exception {
+        mockMvc
+                .perform(get("/commodity/%s".formatted(illegalSku)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode", is(COMMODITY_SKU_ILLEGAL)))
+                .andExpect(jsonPath("$.errorMessage", is("Illegal sku pattern, it should be like 000001")));
+    }
 }

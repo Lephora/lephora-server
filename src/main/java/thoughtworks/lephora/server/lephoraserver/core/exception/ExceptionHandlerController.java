@@ -1,5 +1,7 @@
 package thoughtworks.lephora.server.lephoraserver.core.exception;
 
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,11 +14,36 @@ import static org.springframework.http.ResponseEntity.badRequest;
 @ControllerAdvice
 public class ExceptionHandlerController {
 
+    private static final String UNKNOWN_ERROR_CODE = "000000";
+
+    private final MessageSource messageSource;
+
+    public ExceptionHandlerController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<ExceptionResponseBody> domainExceptionHandler(BusinessException exception, WebRequest request) {
+        var errorMessage = messageSource.getMessage(exception.getErrorCode(), new Object[]{}, request.getLocale());
         return badRequest().body(new ExceptionResponseBody(
                 exception.getErrorCode(),
-                "%s: %s".formatted(exception.getErrorMessage(), request.getDescription(false))));
+                "%s: %s".formatted(errorMessage, exception.getErrorMessage())));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<ExceptionResponseBody> domainExceptionHandler(ConstraintViolationException exception, WebRequest request) {
+        final var constraintViolations = exception.getConstraintViolations();
+        var iterator = constraintViolations.iterator();
+        String errorCode = null;
+        if (iterator.hasNext()) {
+            errorCode = iterator.next().getMessage();
+        }
+        errorCode = errorCode == null || errorCode.isEmpty() ? UNKNOWN_ERROR_CODE : errorCode;
+        var errorMessage = messageSource.getMessage(errorCode, new Object[]{}, request.getLocale());
+        return badRequest().body(new ExceptionResponseBody(
+                errorCode,
+                errorMessage));
     }
 }
