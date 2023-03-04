@@ -8,12 +8,19 @@ trigger:
   event:
     - push
 steps:
-  - name: build & unit-test
-    image: gradle:7.6-jdk17-alpine
-    commands:
-      - ./gradlew clean checkstyleMain checkstyleTest
-      - ./gradlew clean ci-test
-      - ./gradlew bootJar
+  - name: test and build
+    image: quay.io/testcontainers/dind-drone-plugin
+    environment:
+      CI_WORKSPACE: "/drone/src"
+    settings:
+      cmd: ./gradlew clean checkstyleMain checkstyleTest ci-test bootJar
+      build_image: gradle:7.6-jdk17-alpine
+      prefetch_images:
+        - "gradle:7.6-jdk17-alpine"
+        - "postgres:14.5"
+    volumes:
+      - name: docker_socket
+        path: /var/run
   - name: acceptance-test
     image: docker:dind
     privileged: true
@@ -31,7 +38,7 @@ steps:
         from_secret: github_token
       DEFAULT_HOST: http://127.0.0.1:18080
     volumes:
-      - name: docker_socket
+      - name: host_docker_socket
         path: /var/run/docker.sock
     commands:
       - echo "start acceptance test"
@@ -49,7 +56,7 @@ steps:
     privileged: true
     network_mode: host
     volumes:
-      - name: docker_socket
+      - name: host_docker_socket
         path: /var/run/docker.sock
     when:
       status:
@@ -58,8 +65,17 @@ steps:
     commands:
       - apk update && apk --no-cache add bash
       - bash ./acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: docker_socket
+        path: /var/run
 
 volumes:
   - name: docker_socket
+    temp: { }
+  - name: host_docker_socket
     host:
       path: /var/run/docker.sock
