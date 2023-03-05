@@ -19,4 +19,9 @@ public class CommodityImage {
 
     @Column
     private String alternativeText;
+
+    public CommodityImage(String url, String alternativeText) {
+        this.url = url;
+        this.alternativeText = alternativeText;
+    }
 }

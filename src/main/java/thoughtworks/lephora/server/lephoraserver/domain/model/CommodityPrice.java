@@ -11,7 +11,7 @@ import static jakarta.persistence.EnumType.STRING;
 @Embeddable
 public class CommodityPrice {
     @Column(name = "price")
-    private BigDecimal account;
+    private BigDecimal amount;
 
     @Enumerated(STRING)
     @Column(name = "price_unit")
@@ -22,5 +22,18 @@ public class CommodityPrice {
 
     public enum PriceUnit {
         RMB, DOLLAR
+    }
+
+    public CommodityPrice(BigDecimal account, PriceUnit unit) {
+        this.amount = account;
+        this.unit = unit;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public PriceUnit getUnit() {
+        return unit;
     }
 }
