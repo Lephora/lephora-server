@@ -24,12 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static thoughtworks.lephora.server.lephoraserver.domain.model.OrderStatus.WAITING_FOR_PAY;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_COMMODITY_SKU;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_CUSTOMER_ID;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_FULL_NAME;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_PHONE_NUMBER;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_COMMODITY_QUANTITY;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_COMMODITY_SKU;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_CUSTOMER_ID;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_DELIVERY_ADDRESS;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_FULL_NAME;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_PHONE_NUMBER;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.TOO_LONG_ADDRESS;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.TOO_MUCH_QUANTITY;
 
 @WebMvcTest(OrderManagementApi.class)
 class OrderManagementApiTest {
@@ -49,7 +53,11 @@ class OrderManagementApiTest {
                 Arguments.of("request/fail-to-create-order-nil-commodity-quantity.json", NIL_COMMODITY_QUANTITY),
                 Arguments.of("request/fail-to-create-order-nil-address.json", NIL_DELIVERY_ADDRESS),
                 Arguments.of("request/fail-to-create-order-nil-full-name.json", NIL_FULL_NAME),
-                Arguments.of("request/fail-to-create-order-nil-phone-number.json", NIL_PHONE_NUMBER)
+                Arguments.of("request/fail-to-create-order-nil-phone-number.json", NIL_PHONE_NUMBER),
+                Arguments.of("request/fail-to-create-order-too-much-quantity.json", TOO_MUCH_QUANTITY),
+                Arguments.of("request/fail-to-create-order-too-long-address.json", TOO_LONG_ADDRESS),
+                Arguments.of("request/fail-to-create-order-illegal-full-name.json", ILLEGAL_FULL_NAME),
+                Arguments.of("request/fail-to-create-order-illegal-phone-number.json", ILLEGAL_PHONE_NUMBER)
         );
     }
 

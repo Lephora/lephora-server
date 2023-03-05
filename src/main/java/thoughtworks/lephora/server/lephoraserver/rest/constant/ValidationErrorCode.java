@@ -9,4 +9,8 @@ public interface ValidationErrorCode {
     String NIL_PHONE_NUMBER = "20007";
     String NIL_DELIVERY_ADDRESS = "20008";
     String NIL_FULL_NAME = "20009";
+    String TOO_MUCH_QUANTITY = "20010";
+    String TOO_LONG_ADDRESS = "20011";
+    String ILLEGAL_FULL_NAME = "20012";
+    String ILLEGAL_PHONE_NUMBER = "20013";
 }

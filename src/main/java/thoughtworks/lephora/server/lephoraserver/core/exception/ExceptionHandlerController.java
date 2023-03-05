@@ -48,7 +48,6 @@ public class ExceptionHandlerController {
                 errorMessage));
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<ExceptionResponseBody> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, WebRequest request) {
