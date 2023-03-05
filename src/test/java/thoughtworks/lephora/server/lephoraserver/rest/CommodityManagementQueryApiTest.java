@@ -65,6 +65,6 @@ class CommodityManagementQueryApiTest {
                 .perform(get("/commodity/%s".formatted(illegalSku)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode", is(COMMODITY_SKU_ILLEGAL)))
-                .andExpect(jsonPath("$.errorMessage", is("Illegal sku pattern, it should be like 000001")));
+                .andExpect(jsonPath("$.errorMessage", is("Illegal sku pattern, it should be like 000001.")));
     }
 }
