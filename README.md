@@ -34,6 +34,17 @@ make run.local
 ```shell
 make check.local
 ```
++ 生成Jacoco报告
+
+```shell
+./gradlew jacocoTestReport
+```
+
++ 代码风格检查
+
+```shell
+make check.style
+```
 
 ### 构建
 ```shell

@@ -6,7 +6,7 @@ run.local:
 	SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 
 check.local:
-	SPRING_PROFILES_ACTIVE=local ./gradlew clean check jacocoTestCoverageVerification
+	SPRING_PROFILES_ACTIVE=local ./gradlew clean check checkstyleMain checkstyleTest jacocoTestReport jacocoTestCoverageVerification
 
 check.style:
 	./gradlew clean checkstyleMain checkstyleTest
