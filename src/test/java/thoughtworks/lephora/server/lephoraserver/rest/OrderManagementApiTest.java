@@ -1,6 +1,9 @@
 package thoughtworks.lephora.server.lephoraserver.rest;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -9,12 +12,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import thoughtworks.lephora.server.lephoraserver.domain.application.OrderServiceApplication;
 import thoughtworks.lephora.server.lephoraserver.domain.application.result.OrderCreatedResult;
 
+import java.util.stream.Stream;
+
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static thoughtworks.lephora.server.lephoraserver.domain.model.OrderStatus.WAITING_FOR_PAY;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_COMMODITY_SKU;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_CUSTOMER_ID;
 
 @WebMvcTest(OrderManagementApi.class)
 class OrderManagementApiTest {
@@ -25,6 +34,13 @@ class OrderManagementApiTest {
     @MockBean
     private OrderServiceApplication orderServiceApplication;
 
+    private static Stream<Arguments> provideTestCase() {
+        return Stream.of(
+                Arguments.of("request/fail-to-create-order-illegal-customer-id.json", ILLEGAL_CUSTOMER_ID),
+                Arguments.of("request/fail-to-create-order-illegal-commodity-sku.json", ILLEGAL_COMMODITY_SKU)
+        );
+    }
+
     @Test
     void should_return_created_when_create_order_success() throws Exception {
         given(orderServiceApplication.createOrder(any())).willReturn(new OrderCreatedResult("123456789058", WAITING_FOR_PAY));
@@ -34,4 +50,13 @@ class OrderManagementApiTest {
                 .andExpect(status().isCreated());
     }
 
+    @ParameterizedTest
+    @MethodSource("provideTestCase")
+    void should_get_error_when_create_failed(String requestFilePath, String errorCode) throws Exception {
+        mockMvc.perform(post("/order")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(new ClassPathResource(requestFilePath).getInputStream().readAllBytes()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode", is(errorCode)));
+    }
 }

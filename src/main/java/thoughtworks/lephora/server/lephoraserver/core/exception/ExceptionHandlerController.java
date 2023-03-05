@@ -3,6 +3,7 @@ package thoughtworks.lephora.server.lephoraserver.core.exception;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,5 +46,19 @@ public class ExceptionHandlerController {
         return badRequest().body(new ExceptionResponseBody(
                 errorCode,
                 errorMessage));
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<ExceptionResponseBody> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, WebRequest request) {
+        var locale = request.getLocale();
+        var fieldError = exception.getBindingResult().getFieldError();
+        if (fieldError == null) return badRequest().body(new ExceptionResponseBody(UNKNOWN_ERROR_CODE, null));
+        var errorCode = fieldError.getDefaultMessage();
+        errorCode = errorCode == null || errorCode.isEmpty() ? UNKNOWN_ERROR_CODE : errorCode;
+        var errorMessage = messageSource.getMessage(errorCode, new Object[]{fieldError.getRejectedValue()}, locale);
+        var errorResponseBody = new ExceptionResponseBody(errorCode, errorMessage);
+        return badRequest().body(errorResponseBody);
     }
 }

@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static thoughtworks.lephora.server.lephoraserver.query.constant.QueryErrorCode.COMMODITY_NOT_FOUND;
-import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.COMMODITY_SKU_ILLEGAL;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_COMMODITY_SKU;
 
 @WebMvcTest(CommodityManagementQueryApi.class)
 class CommodityManagementQueryApiTest {
@@ -64,7 +64,7 @@ class CommodityManagementQueryApiTest {
         mockMvc
                 .perform(get("/commodity/%s".formatted(illegalSku)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorCode", is(COMMODITY_SKU_ILLEGAL)))
+                .andExpect(jsonPath("$.errorCode", is(ILLEGAL_COMMODITY_SKU)))
                 .andExpect(jsonPath("$.errorMessage", is("Illegal sku pattern, it should be like 000001.")));
     }
 }
