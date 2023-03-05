@@ -79,4 +79,32 @@ public class Commodity {
     public CommodityPrice getPrice() {
         return price;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<CommodityImage> getImages() {
+        return images;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public OffsetDateTime getLastModifiedAt() {
+        return lastModifiedAt;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
 }
