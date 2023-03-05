@@ -24,6 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static thoughtworks.lephora.server.lephoraserver.domain.model.OrderStatus.WAITING_FOR_PAY;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_COMMODITY_SKU;
 import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.ILLEGAL_CUSTOMER_ID;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_COMMODITY_QUANTITY;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_COMMODITY_SKU;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_CUSTOMER_ID;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_DELIVERY_ADDRESS;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_FULL_NAME;
+import static thoughtworks.lephora.server.lephoraserver.rest.constant.ValidationErrorCode.NIL_PHONE_NUMBER;
 
 @WebMvcTest(OrderManagementApi.class)
 class OrderManagementApiTest {
@@ -37,7 +43,13 @@ class OrderManagementApiTest {
     private static Stream<Arguments> provideTestCase() {
         return Stream.of(
                 Arguments.of("request/fail-to-create-order-illegal-customer-id.json", ILLEGAL_CUSTOMER_ID),
-                Arguments.of("request/fail-to-create-order-illegal-commodity-sku.json", ILLEGAL_COMMODITY_SKU)
+                Arguments.of("request/fail-to-create-order-illegal-commodity-sku.json", ILLEGAL_COMMODITY_SKU),
+                Arguments.of("request/fail-to-create-order-nil-commodity-sku.json", NIL_COMMODITY_SKU),
+                Arguments.of("request/fail-to-create-order-nil-customer-id.json", NIL_CUSTOMER_ID),
+                Arguments.of("request/fail-to-create-order-nil-commodity-quantity.json", NIL_COMMODITY_QUANTITY),
+                Arguments.of("request/fail-to-create-order-nil-address.json", NIL_DELIVERY_ADDRESS),
+                Arguments.of("request/fail-to-create-order-nil-full-name.json", NIL_FULL_NAME),
+                Arguments.of("request/fail-to-create-order-nil-phone-number.json", NIL_PHONE_NUMBER)
         );
     }
 
