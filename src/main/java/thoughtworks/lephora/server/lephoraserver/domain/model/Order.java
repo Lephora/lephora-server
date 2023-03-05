@@ -7,9 +7,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Random;
 
 import static jakarta.persistence.EnumType.STRING;
+import static java.math.RoundingMode.HALF_UP;
 import static java.time.OffsetDateTime.now;
 import static thoughtworks.lephora.server.lephoraserver.domain.model.OrderStatus.WAITING_FOR_PAY;
 
@@ -63,20 +66,19 @@ public class Order {
             long quantity,
             ShippingAddress shippingAddress,
             String customerId,
-            String creatorId,
-            Price totalPrice
+            String creatorId
     ) {
         this.commoditySku = commoditySku;
         this.quantity = quantity;
         this.shippingAddress = shippingAddress;
         this.customerId = customerId;
-        this.totalPrice = totalPrice;
         this.orderStatus = WAITING_FOR_PAY;
         this.createdBy = creatorId;
         this.lastModifiedBy = creatorId;
         final var now = now();
         this.createdAt = now;
         this.lastModifiedAt = now;
+        this.id = calculationOrderId();
     }
 
     public String getId() {
@@ -121,6 +123,23 @@ public class Order {
 
     public String getLastModifiedBy() {
         return lastModifiedBy;
+    }
+
+    private String calculationOrderId() {
+        StringBuilder index = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            index.append(new Random().nextInt(10));
+        }
+        return "%s%s%s%s%s".formatted(
+                this.customerId.substring(0, 2),
+                this.commoditySku.substring(0, 2),
+                index,
+                this.commoditySku.substring(3, 5),
+                this.customerId.substring(3, 5));
+    }
+
+    public void calculationTotalPrice(Price unitPrice) {
+        this.totalPrice = Price.of(unitPrice.getAmount().multiply(BigDecimal.valueOf(this.quantity)).setScale(2, HALF_UP), Price.PriceUnit.RMB);
     }
 }
 

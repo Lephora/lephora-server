@@ -6,7 +6,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import thoughtworks.lephora.server.lephoraserver.core.DataSourceConfiguration;
+import thoughtworks.lephora.server.lephoraserver.domain.model.Price;
 import thoughtworks.lephora.server.lephoraserver.fixture.OrderFixture;
+
+import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,6 +27,7 @@ class OrderRepositoryTest {
     void should_return_order_id_when_save_order_success() {
         // given
         final var order = OrderFixture.buildOrder().build();
+        order.calculationTotalPrice(Price.of(BigDecimal.ONE, Price.PriceUnit.RMB));
         // when
         final var savedOrder = orderRepository.saveAndFlush(order);
 
@@ -35,6 +39,7 @@ class OrderRepositoryTest {
     void should_return_order_when_find_order_success() {
         // given
         final var order = OrderFixture.buildOrder().build();
+        order.calculationTotalPrice(Price.of(BigDecimal.ONE, Price.PriceUnit.RMB));
         // when
         final var savedOrder = orderRepository.saveAndFlush(order);
         final var findOrder = orderRepository.findById(savedOrder.getId()).orElseThrow();
