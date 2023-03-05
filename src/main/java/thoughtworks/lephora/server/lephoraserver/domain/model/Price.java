@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import static jakarta.persistence.EnumType.STRING;
 
 @Embeddable
-public class CommodityPrice {
+public class Price {
     @Column(name = "price")
     private BigDecimal amount;
 
@@ -17,16 +17,20 @@ public class CommodityPrice {
     @Column(name = "price_unit")
     private PriceUnit unit;
 
-    protected CommodityPrice() {
+    protected Price() {
     }
 
     public enum PriceUnit {
         RMB, DOLLAR
     }
 
-    public CommodityPrice(BigDecimal account, PriceUnit unit) {
-        this.amount = account;
+    private Price(BigDecimal amount, PriceUnit unit) {
+        this.amount = amount;
         this.unit = unit;
+    }
+
+    public static Price of(BigDecimal amount, PriceUnit unit) {
+        return new Price(amount, unit);
     }
 
     public BigDecimal getAmount() {

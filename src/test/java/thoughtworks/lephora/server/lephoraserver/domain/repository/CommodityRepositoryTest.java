@@ -29,12 +29,12 @@ class CommodityRepositoryTest {
 
         // when
         final var savedCommodity = commodityRepository.saveAndFlush(commodity);
-        final var priceAndUnit = commodityRepository.findFirstBySku(savedCommodity.getSku());
+        final var priceAndUnit = commodityRepository.findPriceBySku(savedCommodity.getSku());
 
         //then
         assertThat(priceAndUnit.isPresent(), is(true));
-        assertThat(priceAndUnit.get().getPrice().getAmount(), is(commodity.getPrice().getAmount()));
-        assertThat(priceAndUnit.get().getPrice().getUnit(), is(commodity.getPrice().getUnit()));
+        assertThat(priceAndUnit.get().getAmount(), is(commodity.getPrice().getAmount()));
+        assertThat(priceAndUnit.get().getUnit(), is(commodity.getPrice().getUnit()));
     }
 
 

@@ -45,7 +45,7 @@ public class Commodity {
     private String lastModifiedBy;
 
     @Embedded
-    private CommodityPrice price;
+    private Price price;
 
     protected Commodity() {
     }
@@ -58,7 +58,7 @@ public class Commodity {
             String title,
             String description,
             Set<CommodityImage> images,
-            CommodityPrice price,
+            Price price,
             String creatorId
     ) {
         this.title = title;
@@ -76,7 +76,7 @@ public class Commodity {
         return sku;
     }
 
-    public CommodityPrice getPrice() {
+    public Price getPrice() {
         return price;
     }
 

@@ -2,7 +2,7 @@ package thoughtworks.lephora.server.lephoraserver.fixture;
 
 import thoughtworks.lephora.server.lephoraserver.domain.model.Commodity;
 import thoughtworks.lephora.server.lephoraserver.domain.model.CommodityImage;
-import thoughtworks.lephora.server.lephoraserver.domain.model.CommodityPrice;
+import thoughtworks.lephora.server.lephoraserver.domain.model.Price;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -13,7 +13,7 @@ public class CommodityFixture {
     private String description = "default fixture description";
     private BigDecimal price = new BigDecimal("100.99");
     private String operatorId = "100000";
-    private CommodityPrice.PriceUnit priceUnit = CommodityPrice.PriceUnit.RMB;
+    private Price.PriceUnit priceUnit = Price.PriceUnit.RMB;
     private final Set<CommodityImage> images = Set.of();
 
     public static CommodityFixture buildCommodity() {
@@ -41,7 +41,7 @@ public class CommodityFixture {
         return this;
     }
 
-    public CommodityFixture withPriceUnit(CommodityPrice.PriceUnit priceUnit) {
+    public CommodityFixture withPriceUnit(Price.PriceUnit priceUnit) {
         this.priceUnit = priceUnit;
         return this;
     }
@@ -61,7 +61,7 @@ public class CommodityFixture {
                 this.title,
                 this.description,
                 this.images,
-                new CommodityPrice(this.price, this.priceUnit),
+                Price.of(this.price, this.priceUnit),
                 this.operatorId
         );
         commodity.attachSku(this.sku);
