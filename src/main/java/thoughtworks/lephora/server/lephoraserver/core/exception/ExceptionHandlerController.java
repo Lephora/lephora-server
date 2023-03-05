@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.internalServerError;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -59,5 +61,20 @@ public class ExceptionHandlerController {
         var errorMessage = messageSource.getMessage(errorCode, new Object[]{fieldError.getRejectedValue()}, locale);
         var errorResponseBody = new ExceptionResponseBody(errorCode, errorMessage);
         return badRequest().body(errorResponseBody);
+    }
+
+    @ExceptionHandler(RedisLockException.class)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ExceptionResponseBody> redisLockExceptionHandler(RedisLockException exception) {
+        return internalServerError()
+                .body(new ExceptionResponseBody(exception.getErrorCode(), "%s: %s".formatted(exception.getErrorMessage(), exception.getMessage())));
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ExceptionResponseBody> serverInternalExceptionHandler(Exception exception) {
+        exception.printStackTrace();
+        return internalServerError()
+                .body(new ExceptionResponseBody(INTERNAL_SERVER_ERROR.name(), exception.getMessage()));
     }
 }

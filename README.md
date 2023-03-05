@@ -18,10 +18,10 @@ make hooks
 
 ### 运行
 
-+ 启动数据库
++ 启动数据库和缓存服务
 
 ```shell
-make db
+make env
 ```
 
 + 本地运行服务

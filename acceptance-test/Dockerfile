@@ -16,4 +16,4 @@ ENV CONTRACT_REPO_NAME $CONTRACT_REPO_NAME
 ENV CONTRACT_REPO_BRANCH $CONTRACT_REPO_BRANCH
 ENV CONTRACT_REPO_PATH $CONTRACT_REPO_PATH
 
-ENTRYPOINT ["java", "-jar","app.jar","--spring.server.port=8080","--spring.datasource.url=jdbc:postgresql://0.0.0.0:5432/lephora", "--spring.datasource.username=postgres","--spring.datasource.password=123456","--spring.flyway.enabled=false"]
+ENTRYPOINT ["java", "-jar","app.jar","--spring.server.port=8080","--spring.datasource.url=jdbc:postgresql://0.0.0.0:5432/lephora", "--spring.datasource.username=postgres","--spring.datasource.password=123456","--spring.flyway.enabled=false","--spring.data.redis.host=0.0.0.0","--spring.data.redis.port=6379","--spring.data.redis.connect-timeout=5000ms"]

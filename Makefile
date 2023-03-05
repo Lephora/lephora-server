@@ -1,6 +1,6 @@
-db:
-	chmod +x ./script/testdb.sh
-	./script/testdb.sh
+env:
+	chmod +x ./script/prepare-infra.sh
+	./script/prepare-infra.sh
 
 run.local:
 	SPRING_PROFILES_ACTIVE=local ./gradlew bootRun

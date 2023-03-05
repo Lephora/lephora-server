@@ -17,6 +17,7 @@ steps:
       build_image: gradle:7.6-jdk17-alpine
       prefetch_images:
         - "gradle:7.6-jdk17-alpine"
+        - "redis:latest"
         - "postgres:14.5"
     volumes:
       - name: docker_socket
@@ -43,7 +44,7 @@ steps:
     commands:
       - echo "start acceptance test"
       - apk update && apk --no-cache add go git bash
-      - bash ./acceptance-test/setup act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
+      - bash ./acceptance-test/setup act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}-cache act-${DRONE_COMMIT}
       - git clone https://github.com/Lephora/support-kit.git
       - cd support-kit/acceptance-test/core/
       - go build -o acceptance-test main.go
@@ -64,7 +65,7 @@ steps:
         - failure
     commands:
       - apk update && apk --no-cache add bash
-      - bash ./acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}
+      - bash ./acceptance-test/clean act-${DRONE_COMMIT}-db act-${DRONE_COMMIT}-cache act-${DRONE_COMMIT}
 services:
   - name: docker
     image: docker:dind

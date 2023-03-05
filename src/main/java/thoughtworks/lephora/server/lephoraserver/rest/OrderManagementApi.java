@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import thoughtworks.lephora.server.lephoraserver.core.cache.RedisCache;
 import thoughtworks.lephora.server.lephoraserver.domain.application.OrderServiceApplication;
 import thoughtworks.lephora.server.lephoraserver.rest.request.CreateOrderRequest;
 import thoughtworks.lephora.server.lephoraserver.rest.response.OrderCreatedResponse;
@@ -25,9 +26,9 @@ public class OrderManagementApi {
 
     @PostMapping
     @ResponseStatus(CREATED)
+    @RedisCache
     public OrderCreatedResponse createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
-        final var createOrderCommand = createOrderRequest.toCommand();
-        final var orderCreatedResult = orderServiceApplication.createOrder(createOrderCommand);
-        return OrderCreatedResponse.fromOrderCreatedResult(orderCreatedResult);
+        return OrderCreatedResponse
+                .fromOrderCreatedResult(orderServiceApplication.createOrder(createOrderRequest.toCommand()));
     }
 }
