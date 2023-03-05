@@ -54,8 +54,11 @@ public class Order {
     protected Order() {
     }
 
+    public void attachId(String orderId) {
+        this.id = orderId;
+    }
+
     public Order(
-            String orderId,
             String commoditySku,
             long quantity,
             ShippingAddress shippingAddress,
@@ -63,7 +66,6 @@ public class Order {
             String creatorId,
             Price totalPrice
     ) {
-        this.id = orderId;
         this.commoditySku = commoditySku;
         this.quantity = quantity;
         this.shippingAddress = shippingAddress;

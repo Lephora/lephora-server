@@ -12,12 +12,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-
 @Transactional
 @SpringBootTest(classes = DataSourceConfiguration.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class OrderRepositoryTest {
-
 
     @Autowired
     private OrderRepository orderRepository;

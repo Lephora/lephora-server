@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-
 @Transactional
 @SpringBootTest(classes = DataSourceConfiguration.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -36,7 +35,6 @@ class CommodityRepositoryTest {
         assertThat(priceAndUnit.get().getAmount(), is(commodity.getPrice().getAmount()));
         assertThat(priceAndUnit.get().getUnit(), is(commodity.getPrice().getUnit()));
     }
-
 
     @Test
     void should_return_commodity_sku_when_save_commodity_success() {

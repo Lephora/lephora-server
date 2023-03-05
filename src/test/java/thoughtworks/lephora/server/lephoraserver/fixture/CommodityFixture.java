@@ -20,7 +20,6 @@ public class CommodityFixture {
         return new CommodityFixture();
     }
 
-
     public CommodityFixture withTitle(String title) {
         this.title = title;
         return this;
