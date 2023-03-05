@@ -13,7 +13,7 @@ steps:
     environment:
       CI_WORKSPACE: "/drone/src"
     settings:
-      cmd: ./gradlew clean checkstyleMain checkstyleTest ci-test bootJar
+      cmd: ./gradlew clean checkstyleMain checkstyleTest test bootJar
       build_image: gradle:7.6-jdk17-alpine
       prefetch_images:
         - "gradle:7.6-jdk17-alpine"

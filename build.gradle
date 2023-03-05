@@ -68,10 +68,3 @@ tasks {
         dependsOn(test)
     }
 }
-
-tasks.register('ci-test', Test) {
-    useJUnitPlatform()
-    filter {
-//        excludeTestsMatching "thoughtworks.lephora.server.lephoraserver.rest.*"
-    }
-}
